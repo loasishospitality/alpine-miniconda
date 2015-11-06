@@ -1,0 +1,3 @@
+envs_dirs:
+  - /home/jovyan/envs
+  - /opt/conda/envs
