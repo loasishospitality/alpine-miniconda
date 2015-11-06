@@ -21,14 +21,12 @@ RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/re
     && curl "https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-bin-2.21-r2.apk" -o glibc-bin.apk \
     && apk add --allow-untrusted glibc-bin.apk \
     && /usr/glibc/usr/bin/ldconfig /lib /usr/glibc/usr/lib \
-    && rm -rf glibc-2.21* /var/cache/apk/*
+    && rm -rf glibc*apk /var/cache/apk/*
 
 # Configure environment
 ENV CONDA_DIR=/opt/conda \
   PATH=$CONDA_DIR/bin:$PATH \
   SHELL=/bin/bash \
-  NB_USER=jovyan \ 
-  NB_UID=1000 \
   LANG=C.UTF-8
 
 # Install conda
