@@ -1,9 +1,8 @@
-FROM gliderlabs/alpine:3.2
+FROM gliderlabs/alpine
 
 MAINTAINER CognitiveScale <devops@cognitivescale.com>
 
-RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \ 
-    && apk --update add \
+RUN apk --update  --repository http://dl-4.alpinelinux.org/alpine/edge/community add \
     bash \
     git \
     curl \
@@ -15,26 +14,23 @@ RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/re
     glib \
     libxext \
     libxrender \
-    tini@testing \
-    && curl "https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk" -o glibc.apk \
-    && apk add --allow-untrusted glibc.apk \
-    && curl "https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-bin-2.21-r2.apk" -o glibc-bin.apk \
-    && apk add --allow-untrusted glibc-bin.apk \
-    && /usr/glibc/usr/bin/ldconfig /lib /usr/glibc/usr/lib \
-    && rm -rf glibc*apk /var/cache/apk/*
+    tini \ 
+    && curl -L "https://github.com/andyshinn/alpine-pkg-glibc/releases/download/2.23-r1/glibc-2.23-r1.apk" -o /tmp/glibc.apk \
+    && curl -L "https://github.com/andyshinn/alpine-pkg-glibc/releases/download/2.23-r1/glibc-bin-2.23-r1.apk" -o /tmp/glibc-bin.apk \
+    && curl -L "https://github.com/andyshinn/alpine-pkg-glibc/releases/download/2.23-r1/glibc-i18n-2.23-r1.apk" -o /tmp/glibc-i18n.apk \
+    && apk add --allow-untrusted /tmp/glibc*.apk \
+    && /usr/glibc-compat/sbin/ldconfig /lib /usr/glibc-compat/lib \
+    && /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8 \
+    && rm -rf /tmp/glibc*apk /var/cache/apk/*
 
 # Configure environment
-ENV CONDA_DIR=/opt/conda \
-  PATH=$CONDA_DIR/bin:$PATH \
-  SHELL=/bin/bash \
-  LANG=C.UTF-8
+ENV CONDA_DIR=/opt/conda CONDA_VER=3.19.0
+ENV PATH=$CONDA_DIR/bin:$PATH SHELL=/bin/bash LANG=C.UTF-8
 
 # Install conda
 RUN mkdir -p $CONDA_DIR && \
     echo export PATH=$CONDA_DIR/bin:'$PATH' > /etc/profile.d/conda.sh && \
-    curl https://repo.continuum.io/miniconda/Miniconda3-3.18.3-Linux-x86_64.sh  -o mconda.sh && \
+    curl https://repo.continuum.io/miniconda/Miniconda3-${CONDA_VER}-Linux-x86_64.sh  -o mconda.sh && \
     /bin/bash mconda.sh -f -b -p $CONDA_DIR && \
     rm mconda.sh && \
-    $CONDA_DIR/bin/conda install --yes conda==3.18.3
-
-#  echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf && \
+    $CONDA_DIR/bin/conda install --yes conda==${CONDA_VER}
