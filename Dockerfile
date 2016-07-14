@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.4
 
 MAINTAINER CognitiveScale <devops@cognitivescale.com>
 
