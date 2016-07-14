@@ -3,6 +3,7 @@ FROM alpine:3.4
 MAINTAINER CognitiveScale <devops@cognitivescale.com>
 
 RUN apk --update  --repository http://dl-4.alpinelinux.org/alpine/edge/community add \
+    nano \
     bash \
     git \
     curl \
