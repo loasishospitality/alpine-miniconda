@@ -1,6 +1,6 @@
 FROM alpine:3.8
 
-MAINTAINER CognitiveScale <devops@cognitivescale.com>
+LABEL maintainer="devops@cognitivescale.com"
 
 RUN apk --update  --repository http://dl-4.alpinelinux.org/alpine/edge/community add \
     bash \
