@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:3.8
 
 MAINTAINER CognitiveScale <devops@cognitivescale.com>
 
@@ -24,7 +24,7 @@ RUN apk --update  --repository http://dl-4.alpinelinux.org/alpine/edge/community
     && rm -rf /tmp/glibc*apk /var/cache/apk/*
 
 # Configure environment
-ENV CONDA_DIR=/opt/conda CONDA_VER=4.3.14
+ENV CONDA_DIR=/opt/conda CONDA_VER=4.5.4
 ENV PATH=$CONDA_DIR/bin:$PATH SHELL=/bin/bash LANG=C.UTF-8
 
 # Install conda
